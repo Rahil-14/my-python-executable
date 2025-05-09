@@ -21,5 +21,5 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: tst01_executable.exe
-        path: dist/tst01_executable.exe
+        name: tst01executable.exe
+        path: dist/tst01executable.exe
