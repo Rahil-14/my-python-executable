@@ -460,8 +460,9 @@ def zigzag():
     z_min, z_max = stl_mesh.bounds[:,2] # Get the min and max z values of the mesh
     slice_every = np.arange(z_min,z_max,step=slice_thickness) # Create an array of z values to slice at
     slices = stl_mesh.section_multiplane(plane_origin=[0,0,z_min] , plane_normal=[0,0,1], heights=slice_every)
-    print(f"number of slices: {len(slices)}") # Slice the mesh
+    slice_number = 0
     for slice_result in slices:
+        
         if slice_result is not None:
             s=time.time()
             poly_list = []
@@ -546,9 +547,15 @@ def zigzag():
             zigzag_lines = np.array(zigzag_lines)
             poly_list = [repoint_polygon(poly, n_points=200) for poly in poly_list]
             tool_path = connect_points(zigzag_lines, poly_list, line_spacing, theta,solid)
+            z = slice_every[slice_number]
+            for path in tool_path:
+                for i in range(len(path)):
+                    point = path[i]
+                    path[i] = np.array([point[0], point[1], z])
             e=time.time()
             print(f"slice number {ti} took {e-s} seconds")
             ti+=1
+            slice_number += 1
         
 #------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------
